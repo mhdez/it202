@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Find My School!</title>
+        <style>
+            p, h1 {font-family: helvetica;}
+            p {font-size:2.0em;line-height:1.5em; margin-left: 24px;}
+            pre {font-size: 2em;}
+            
+            div {
+                background-color:gray;                                                          
+                border: 10px solid black; 
+                border-radius: 6px;
+                min-height:75px;
+                padding:35px;
+            }
+            img {
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                padding: 5px;
+                width: 150px;
+                
+            }
+        </style>
+    </head>
+    <body>
+    <h1>Find My School!</h1>
+    <!-- div for instructions and form -->
+    <div id="form">
+        <a href ="https://data.cityofchicago.org/Education/Chicago-Public-Schools-School-Profile-Information-/8i6r-et8s">Chicago Public Schools Information Page</a>
+        <p>  Enter your School.
+        </p>
+        <img src="https://img.clipartfox.com/925abfa083cddeb453718e370efeb810_print-this-school-clipart-clipart-picture-of-school_300-302.jpeg" alt="Paris" style="width:150px">
+        <br>
+        <a href ="https://data.cityofchicago.org/Education/Chicago-Public-Schools-School-Profile-Information-/8i6r-et8s"></a>
+        <input id="school" type="text" placeholder="Enter Your School"></input>
+        <button type="button" id="btnSearch" >Find My School</button>
+    </div>
+    
+    <!-- a div to store the results -->
+    <div id="results">
+        
+        
+        
+    </div>
+    
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script>
+     
+        /*
+            This script retrieves towed vehicle data for the entered plate
+        */
+        
+       
+        $(function () {    // don't execute code until DOM is ready
+            /*
+                most code should wait for the button click event,
+                but creating and setting some variables *can* be 
+                done when the page loads
+            */
+
+            // api endpoint for the towed vehicle data
+            var baseURL = 'https://data.cityofchicago.org/resource/76dk-7ieb.json';
+     
+           
+            // optional filters we're appending: plate
+            var filters = '?$q=';
+            
+            // the url; we'll append the plate number in button click
+            var url = baseURL + filters;   
+            
+            console.log (url);
+            
+            // start with button disabled
+            $("#btnSearch").attr("disabled", true);
+            
+            // enable button only if text in input box
+            $("#school").keyup(function(){   // change event doesn't work, so using keyup 
+                if ($("#school").val() == "") {   // if value is empty
+                    $("#btnSearch").attr("disabled", true)  // set disabled
+                }
+                else {
+                    $("#btnSearch").attr("disabled", false)
+                }
+            })
+            
+            
+            
+         
+           
+            // we want to get the data and display on button click
+            $("#btnSearch").on("click", function() {
+                
+                // each time we search, we need to clear the results
+                $("#results").html("");
+                
+                // get the input plate number
+                //   and append to url in getJSON call
+                var plateNum = $("#school").val();
+           
+                var urlWithParams = url + plateNum;
+                console.log(urlWithParams);  // verify that it's being created correctly
+           
+                // jQuery command to retrieve json data
+                
+                $.getJSON(urlWithParams)       // append the plateNum
+                    .done (function (data) {    // execute this function when getJSON is done
+                        
+                        console.log(data);
+                        
+                        var numRecords = data.length;  // the length of the array
+                        
+                        // notify of number of records
+                        var message = 
+                            "<p>Records found: "
+                            + numRecords
+                            + "</p>"
+                        
+                        $("#results").append(message);
+                        
+
+                        
+                        // only loop records if count > 0
+                        if (numRecords > 0) {
+                            // loop through the records
+                            $.each (data , 
+                                function (index, value) {
+                                   
+                                     var googleAddress = (value.address).replace(/ /g, "+");
+                        
+                                        var maps = 'https://www.google.com/maps/place/';
+                            
+                                        var googleMaps = maps + googleAddress;
+                        
+                                        console.log (googleMaps);
+                                        
+                                        var website = value.website
+                                        
+                                        console.log (website);
+                                        
+                                    // append content to the body 
+                                    var html = "<h2>" 
+                                        + value.short_name 
+                                        + "<br>"
+                                        + "</h2>"
+                                        + "<p>" 
+                                        + "Type: "
+                                        + value.school_type
+                                        + "<br>"
+                                        + "Category: "
+                                        + value.primary_category
+                                        + "<br>Address: "
+                                        + value.address
+                                        + "<br>Google Maps: "
+                                        + '<a href="https://www.google.com/maps/place/' + googleAddress +'">Google Maps </a>'
+                                        + "<br>Principal: "
+                                        + value.administrator
+                                        + "<br>Website: "
+                                        + value.website
+                                        +'<a href="'  + value.website +'" > Website </a>'
+                                        + "</p>";
+                                   
+        
+                                   
+                                    $("#results").append(html);
+     
+                            
+                                
+                                }  // end of function
+                            
+                            ); // end of each loop                            
+                        
+                        }   // end of if statement
+
+                    })  // end of getJSON
+            
+            })  // end of button click event
+        
+        }) // end of jQuery wrapper
+        
+        
+    </script>
+    </body>
+</html>
