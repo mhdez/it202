@@ -1,0 +1,15 @@
+  div {
+            background-color: skyblue; 
+            border: 5px solid black; 
+            border-radius: 7px;
+            background: #4dc3ff;
+            padding: 20px; 
+            position: relative;
+            left: 50px;
+            text-align: center;
+            width: 200px;   
+            }
+h1 { text-align: center;
+    color: red; }
+body { background-color:lightblue;}
+img { postion: left;}

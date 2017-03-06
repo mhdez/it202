@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>jQuery.parseXML demo</title>
+  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+  <link rel="stylesheet" type="text/css" href="bustracker.css">
+  </head>
+<body>
+<h1> Bus routes</h1>
+   <img src="https://pbs.twimg.com/profile_images/1617237207/cta-logo---flattransp.png" alt="Paris" style="width:150px">     
+          <div id ="Eastbound"> </div>
+          <div id ="Northbound"> </div>
+          <div id ="Southbound"> </div>
+     
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+      <script>
+       /* global $*/
+        $(function() {
+          
+          
+          var apiPassThruUrl = "https://polar-garden-75406.herokuapp.com/apiPassThru.php";
+          
+          var apiEndpoint = "http://ctabustracker.com/bustime/api/v2/getpredictions";
+          
+        
+         
+          
+          $.ajax({
+              url: apiPassThruUrl,
+              dataType: "json",
+              method: 'GET',
+              data: {"apiEndpoint": apiEndpoint,
+                      "key" : "NBXDNw5nebbNpmPtGJYYqLxWZ",
+                      "format":"json",
+                      "rt": "152,49",
+                      "stpid": "12525,8417",
+                  
+              }
+              
+            }
+            
+            ).done (function (data) {
+              console.log(data);
+             
+              $.each(data["bustime-response"]["prd"], function(i,v) {
+                  $("#"+ v.rtdir).append("Route #" + v.rt 
+                  + "<br>" + "Stop Id:" + v.stpid 
+                  + "<br>"
+                  + "min " 
+                  + v.prdctdn + "<br>"
+                  + "Route Direction " + v.rtdir );
+                
+              });
+
+            });
+        });
+            
+  
+</script>
+ 
+</body>
+</html>

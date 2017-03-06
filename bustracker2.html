@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <style>
+    <style>
+            p, h1 {font-family: helvetica;}
+            p {
+            font-size:1.5em;
+            line-height:1.5em; 
+            margin-left: 24px;
+                
+            }
+            pre {font-size: 2em;}
+            
+            div {
+            background-color: #4dc3ff; 
+            border: 1px solid black; 
+            border-radius: 6px;
+            border-radius: 25px;                
+            background: #4dc3ff;
+            padding: 20px; 
+            width: 200px;   
+            }
+            
+            .Pass {background-color: green;}
+            .Fail {background-color: red;}
+        </style>
+  <meta charset="utf-8">
+  <title>jQuery Bus Tracker demo</title>
+  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+  
+</head>
+<body>
+  <h1> Bus routes</h1>
+         <div id ="Westbound">  </div>
+          <div id ="Eastbound"> </div>
+          <div id ="Northbound">  </div>
+          <div id ="Southbound"> </div>
+ 
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+      <script>
+       /* global $*/
+        $(function() {
+          
+          
+          var apiPassThruUrl = "https://polar-garden-75406.herokuapp.com/apiPassThru.php";
+          
+          var apiEndpoint = "http://ctabustracker.com/bustime/api/v2/getpredictions";
+          
+        
+         
+          
+          $.ajax({
+              url: apiPassThruUrl,
+              dataType: "json",
+              method: 'GET',
+              data: {"apiEndpoint": apiEndpoint,
+                      "key" : "NBXDNw5nebbNpmPtGJYYqLxWZ",
+                      "format":"json",
+                      "rt": "152,49",
+                      "stpid": "12525,8417",
+                  
+              }
+              
+            }
+            
+            ).done (function (data) {
+              console.log(data);
+             
+              $.each(data["bustime-response"]["prd"], function(i,v) {
+                  $("#"+ v.rtdir).append("Route #" + v.rt 
+                  + "<br>" + "Stop Id:" + v.stpid 
+                  + "<br>"
+                  + "min " 
+                  + v.prdctdn + "<br>"
+                  + "Route Direction " + v.rtdir );
+                
+              });
+
+            });
+        });
+            
+  
+</script>
+ 
+</body>
+</html>
