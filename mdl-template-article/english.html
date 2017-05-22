@@ -1,0 +1,62 @@
+<! doctype html>
+<html>
+    <head>
+    <style>
+        body {background-color: lightblue }
+        h1 { text-align: center; }
+    </style>    
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+
+      // Load the Visualization API and the corechart package.
+      google.charts.load('current', {'packages':['corechart']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.charts.setOnLoadCallback(drawChart);
+
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function drawChart() {
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Topping');
+        data.addColumn('number', 'Slices');
+        data.addRows([
+          ['English', 101],
+          ['Arabic', 59],
+          ['French', 51],
+          ['Spanish', 31],
+        ]);
+
+        // Set chart options
+        var options = {'title':'Percentage of Spoken Languages in the World',
+                       'width':400,
+                       'height':300};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+    </script>    
+        
+    </head>
+    <body>
+        <h1>The English Language</h1>
+       
+        <p> English is a difficult language to learn. Although it is not the most spoken language, it is spoken throughout the world.</p>
+        <p>Especially for immigrants, it is important to learn the language in order to comunicate.</p>
+        
+        <p> Here are some links to websites that will help anyone learn a thing or two
+       <p><a href="https://www.learnenglish.de/">Leo Network</a></p> </p>
+        <p><a href="https://www.englishclub.com/learn-english.htm/">English Club</a></p>
+        <p><a href="https://www.ecenglish.com/learnenglish/">EC English</a></p>
+    
+    <div id="chart_div"></div>
+    </body>
+    
+    
+    
+</html>

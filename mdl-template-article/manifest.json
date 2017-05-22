@@ -1,0 +1,16 @@
+{
+  "short_name": "Howto",
+  "name": "Howto",
+  "icons": [
+    {
+      "src":"http://nazirevolution.weebly.com/uploads/2/5/3/8/25388491/7121215.jpg",
+      "sizes": "192x192",
+      "type": "image/png",
+    }
+  ],
+  "start_url": "index.html?utm_source=homescreen",
+  "background_color": "#000",
+  "theme_color": "#536878",
+  "display": "standalone",
+  
+}

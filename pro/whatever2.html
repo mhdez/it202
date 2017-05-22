@@ -1,0 +1,3323 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html>
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+	<title>
+		--- - Estimated Arrival Times 
+	</title>
+
+	<link rel="stylesheet" type="text/css" href="/bustime/css/CDMap.css"></link>		
+	<link rel="stylesheet" type="text/css" href="/bustime/ta/CTA/css/CDMap.css"></link>
+
+
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+
+;(function (cd) { 
+
+/**
+ * BusTime configuration properties, saved from jsp into javascript objects.
+ * 
+ * @class
+ * @memberOf cd
+ */
+cd.Properties = function()
+{
+};
+
+cd.Properties.SCHEDULES_AVAILABLE = true;
+cd.Properties.NORMAL_MAX_RESOLUTION = 16;
+cd.Properties.NORMAL_MIN_RESOLUTION = 10;
+
+cd.Properties.TA_DIRECTORY_NAME = "CTA";
+
+cd.Properties.ALLOW_HYBRID_TO_DISPLAY = false;
+cd.Properties.ALLOW_SATELLITE_TO_DISPLAY = false;
+cd.Properties.SMS_AVAILABLE = true;
+cd.Properties.SMS_PHONE = "41411";
+cd.Properties.SMS_PREFIX = "CTABUS";
+cd.Properties.CHECK_METHOD = "url";
+
+/**
+ * Starting zoom level for map display. The smaller the number, the further out the zoom.
+ * @type {number}
+ * @memberOf cd.Properties 
+ */
+cd.Properties.STARTING_ZOOM = 13;
+
+cd.Properties.STARTING_LAT = 41.872117;
+cd.Properties.STARTING_LNG = -87.681111;
+
+/**
+ * Zoom level in which stops are displayed on the map. When the map is zoomed out too far, stops become a continuous line of icons and provide no real information.
+ * @type {number}
+ * @memberOf cd.Properties 
+ */
+cd.Properties.SHOW_STOPS_ZOOM = 13;
+
+/**
+ * Zoom level at which to switch from the small bus icons to the medium size icons.
+ * @type {number}
+ * @memberOf cd.Properties 
+ */
+cd.Properties.MEDIUM_BUSES_ZOOM = 14;
+
+/**
+ * Zoom level at which arrows are visible.
+ * @type {number}
+ * @memberOf cd.Properties 
+ */
+cd.Properties.ARROW_ZOOM = 15;
+
+cd.Properties.BOUNDS_LAT_SW = 41.6;	
+cd.Properties.BOUNDS_LNG_SW = -88.1;	
+cd.Properties.BOUNDS_LAT_NE = 42.1;
+cd.Properties.BOUNDS_LNG_NE = -87.3;	
+
+cd.Properties.STREET_VIEW = true;
+
+/**
+ * Controls showing of zone info in the map pages.
+ * @type {boolean}
+ * @memberOf cd.Properties 
+ */
+cd.Properties.SHOW_ZONE = true;
+
+cd.Properties.SUPERVISOR_WORK_INFO = "runid";
+cd.Properties.SUPERVISOR_WORK_TEXT = "";
+
+cd.Properties.BUS_REDISPLAY_IN_SECONDS = 15;
+
+cd.Properties.MAX_ROUTES_DISPLAY_DEFAULT = 5;
+cd.Properties.MAX_ROUTES_DISPLAY_IE = 5;
+
+/**
+ * Show consistid on map pages @1
+ * @type {boolean}
+ * @memberOf cd.Properties 
+ */
+cd.Properties.SHOW_CONSIST = true;
+
+/**
+ * Show carlist on map pages @1
+ * @type {boolean}
+ * @memberOf cd.Properties 
+ */
+cd.Properties.SHOW_CARLIST = true;
+
+/**
+ * Vehicle mode constants so it can be easily accessed by all JS @2 added MODE_NONE @3
+ * @type {number}
+ * @memberOf cd.Properties 
+ */
+cd.Properties.MODE_BUS = 1;
+
+/**
+ * Vehicle mode constants so it can be easily accessed by all JS @2 added MODE_NONE @3
+ * @type {number}
+ * @memberOf cd.Properties 
+ */
+cd.Properties.MODE_RAIL = 3;
+
+/**
+ * Vehicle mode constants so it can be easily accessed by all JS @2 added MODE_NONE @3
+ * @type {number}
+ * @memberOf cd.Properties 
+ */
+cd.Properties.MODE_PEOPLE_MOVER = 4;
+
+/**
+ * Vehicle mode constants so it can be easily accessed by all JS @2 added MODE_NONE @3
+ * @type {number}
+ * @memberOf cd.Properties 
+ */
+cd.Properties.MODE_FERRY = 2;
+
+/**
+ * Vehicle mode constants so it can be easily accessed by all JS @2 added MODE_NONE @3
+ * @type {number}
+ * @memberOf cd.Properties 
+ */
+cd.Properties.MODE_NONE = 0;
+
+/**
+ * Show all ferries option on the public web site @3
+ * @type {boolean}
+ * @memberOf cd.Properties 
+ */
+cd.Properties.SHOW_ALL_FERRIES = false;
+
+cd.Properties.NATIVE_RTPI_FEED_NAME = "bustime"; 
+
+/**
+ * The label to be used for feed selectors.
+ * @type {string}
+ * @memberOf cd.Properties 
+ */
+cd.Properties.FEED_LABEL = "Feed"; //@5
+
+/**
+ * If true, system is configured for the CENTRO agency implementation.
+ * @type {boolean}
+ * @memberOf cd.Properties 
+ */
+cd.Properties.CENTRO_AGENCY_SPECIAL_CASE = false; //@5
+
+/**
+ * Property used to control "Find Stop" on the map.
+ * @type {boolean}
+ * @memberOf cd.Properties 
+ */
+cd.Properties.FIND_STOP_ENABLED = true; //@6
+
+/**
+ * The trace level used in BusTime javascript.
+ * @type {number}
+ * @memberOf cd.Properties 
+ */
+cd.Properties.TRACE_LEVEL = 2; //@7
+
+})(window.cd = window.cd || {});
+	
+</script>
+ 
+	
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>	
+
+	<link rel="stylesheet" href="../javascript/MultiSelectComboBox/jquery-ui-1.11.4.custom/jquery-ui.min.css">
+	<script src="../javascript/MultiSelectComboBox/jquery-ui-1.11.4.custom/jquery-ui.min.js"></script>
+
+	<link rel="stylesheet" href="../javascript/MultiSelectComboBox/jquery-ui-multiselect-widget-master/jquery.multiselect.css">
+	<script src="../javascript/MultiSelectComboBox/jquery-ui-multiselect-widget-master/src/jquery.multiselect.js"></script>
+
+	
+
+
+
+
+<script>
+	function MultiSelectComboBoxJSP()
+	{
+	}
+
+
+	/**
+	 * Locale-specific text used by MultiSelectComboBox.js
+	 */
+	MultiSelectComboBoxJSP.text = {
+
+		All: "All",
+
+		Multiple: "(Multiple)",
+
+		SelectAll: "Select All",
+
+		YouMustSelectAtLeastOneItem: "You must select at least one item."
+	};
+
+</script>
+
+	<script src="../javascript/MultiSelectComboBox/multiSelectComboBox.js"></script>
+	
+
+	<script src="../javascript/Utils.js" type="text/javascript" ></script>
+	<script src="../javascript/Trace.js" type="text/javascript" ></script>
+	<script src="../javascript/RtpiFeed.js" type="text/javascript" ></script> 
+	<script src="../javascript/Route.js" type="text/javascript" ></script>
+	<script src="../javascript/Direction.js" type="text/javascript" ></script>
+	<script src="../javascript/Stop.js" type="text/javascript" ></script>
+
+	<script type="text/javascript" src="ScrollDiv.js"></script>
+	<script type="text/javascript" src="LinkPopup.js"></script>
+	<script src="/bustime/map/javascript/BrowserDetect.js" type="text/javascript"></script>
+
+	<script>
+		var g_requestContextPath = "/bustime"; 
+	</script>
+	
+	
+
+</head>
+
+<body bgcolor="#ffffff">
+
+<script>
+	ScrollDiv_initialize('marquee');
+</script>
+
+	<center>
+		<table id="etamain" border="0" cellpadding="0" cellspacing="0">
+			<tr id='etabanner'>		
+				<td>
+					<table border="0" cellpadding="0" cellspacing="0">
+						<tr><td>
+						<table width="100%" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td><a href="/bustime"><img src="/bustime/ta/CTA/image/banner_arrivaltimes_left.jpg" border="0"></a></td>
+								
+									<td><a href="/bustime"><img src="/bustime/ta/CTA/image/banner_arrivaltimes_right.jpg" border="0"></a></td>
+								
+							</tr>
+						</table>
+						</td></tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<table border="0" cellpadding="0" cellspacing="0">
+						<tr>
+							<td><img src="/bustime/ta/CTA/image/upperborder_leftcorner.jpg" border="0"/></td>
+							<td width="100%" height="10" background="/bustime/ta/CTA/image/upperborder_tile.jpg"></td>
+							<td><img src="/bustime/ta/CTA/image/upperborder_rightcorner.jpg" border="0"/></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>  
+				<td>
+					<table border="0" cellpadding="0" cellspacing="0" style="margin:auto"> <!-- @11 -->
+						<tr>
+							<td>
+								<table width="750" border="0" cellpadding="0" cellspacing="0">
+									<tr><td>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
+        <style>
+            .ui-widget {
+            	font-size: 12px;
+            	padding: 2px 0 0px 2px;
+            }
+        </style>
+		
+
+<script type="text/javascript">
+
+	//@28
+	$( document ).ready(function() {
+		$( "#feedSelector" ).multiSelectComboBox(); // Change the standard html option element into a JQueryUI multiSelectComboBox widget.
+	});
+
+	/** Array of RtpiFeed objects corresponding to feed combo box entries. */
+	var g_rtpiFeeds = [];
+	//end @28
+
+	/** Array of Route objects corresponding to route combo box entries. */
+	var g_routes = []; //@36
+	
+	/** Map of Direction objects corresponding to direction combo box entries. */
+	var g_directions = {};
+
+	/** Map of Stop objects corresponding to stop combo box entries. */
+	var g_stops = {};
+
+	// @17 function call on agency select 
+    function agencySelected()
+    {
+		g_trace.println("eta/selector.jsp - agencySelected -- BEGIN", Trace.DIAG1);
+
+		var agencySelect = document.stopSelectForm.agencySelect;
+		var agencyStr = agencySelect.options[agencySelect.selectedIndex].value;
+		
+		var routeSelect = document.stopSelectForm.routeSelect;
+		routeSelect.disabled = false;
+		
+		var directionSelect = document.stopSelectForm.directionSelect;
+		directionSelect.disabled = false;
+
+		var stopSelect = document.stopSelectForm.stopSelect;
+		stopSelect.disabled = false;
+		
+		getRoutesByAgency(agencyStr);
+
+		g_trace.println("eta/selector.jsp - agencySelected -- END", Trace.DIAG1);
+    }
+	//end @17
+	
+
+	//@28
+	/**
+	 * Called when a feed is selected from the feed selection combo box.
+	 */
+	function feedSelected()
+	{
+		g_trace.println("eta/selector.jsp - feedSelected -- BEGIN", Trace.DIAG1);
+
+		initializeRoutes(true);
+
+		g_trace.println("eta/selector.jsp - feedSelected -- END", Trace.DIAG1);
+	}
+	//end @28
+
+	/**
+	 * Called when a route is selected from the route selection combo box.
+	 */
+	function routeSelected()
+	{
+		g_trace.println("eta/selector.jsp - routeSelected -- BEGIN", Trace.DIAG1);
+
+		var routeString = $("#routeSelector :selected").val();
+		var searchRoute = cd.Route.fromFeedColonDesignatorString(routeString); //@36
+		var route = cd.Route.getRoute(g_routes, searchRoute); //@36
+
+		var directionSelect = document.stopSelectForm.directionSelect;
+		directionSelect.disabled = false;
+
+		var stopSelect = document.stopSelectForm.stopSelect;
+		stopSelect.disabled = false;
+
+		getDirections(route, null, false);
+
+		g_trace.println("eta/selector.jsp - routeSelected -- END", Trace.DIAG1);
+	}
+
+	/**
+	 * Called when a direction is selected from the direction selection combo box.
+	 */
+	function directionSelected()
+	{
+		g_trace.println("eta/selector.jsp - directionSelected -- BEGIN", Trace.DIAG1);
+
+		var routeString = $("#routeSelector :selected").val();
+		var searchRoute = cd.Route.fromFeedColonDesignatorString(routeString); //@36
+		var route = cd.Route.getRoute(g_routes, searchRoute); //@36
+
+		var directionString = $("#directionSelector :selected").val();
+		var direction = g_directions[ directionString ];
+
+		getStops(route, direction, null);
+
+		g_trace.println("eta/selector.jsp - directionSelected -- END", Trace.DIAG1);
+	}
+
+	//@17
+	//@28
+	/**
+	 * Called when a stop is selected from the stop selection combo box.
+	 */	
+	function stopSelected()
+	{
+		g_trace.println("eta/selector.jsp - stopSelected -- BEGIN", Trace.DIAG1);
+
+		var agencySelect = document.stopSelectForm.agencySelect;	
+		var agencyStr;
+		
+		if (agencySelect !== undefined)
+		{
+			agencyStr = agencySelect.options[agencySelect.selectedIndex].value;
+		}
+
+		var routeString = $("#routeSelector :selected").val();
+
+		var directionString = $("#directionSelector :selected").val();
+
+		var stopName = $("#stopSelector :selected").text();
+		var stopStrings = $("#stopSelector :selected").val();
+
+		var showAllBussesCheckbox = document.stopSelectForm.showAllBusses;
+		var showAllBusses = showAllBussesCheckbox.checked;
+		showAllBusses.disabled = false;
+
+		// Get the selected rtpi feed names from the feed selection combo box.
+		var selectedRtpiFeeds = $("#feedSelector").multiSelectComboBox("getSelectedValues");
+
+		if(stopName.length <= 0 || stopStrings == "NULL" || stopStrings == "NOSTOP")
+		{
+			g_trace.println("eta/selector.jsp - stopSelected -- END 1", Trace.DIAG1);
+			return;
+		}
+
+		stopName = encodeURIComponent(stopName);  //@13
+		directionString = encodeURIComponent(directionString); //@14
+		stopStrings = encodeURIComponent(stopStrings); //@40
+
+		var newDoc = "./eta.jsp?";
+
+		if (agencyStr !== undefined) 
+		{
+			agencyStr = encodeURIComponent(agencyStr);
+			newDoc += "agency="+agencyStr+"&";
+		}
+
+		newDoc += "route=" + routeString + "&";
+		newDoc += "direction=" + directionString + "&";
+		newDoc += "stop=" + stopName + "&";
+		newDoc += "id=" + stopStrings + "&";
+		newDoc += "showAllBusses=" + (showAllBusses ? "on" : "off");
+
+		if(selectedRtpiFeeds != null && selectedRtpiFeeds.length > 0)
+		{
+			newDoc += "&selectedRtpiFeeds=" + selectedRtpiFeeds.join(",");
+		}
+
+
+
+		document.location.href = newDoc;
+
+		g_trace.println("eta/selector.jsp - stopSelected -- END", Trace.DIAG1);
+	}
+	//end @28
+
+	/**
+	 * Called when a specified stop id is being searched by clicking the find button.
+	 */
+	function findStopOnClick()
+	{
+		g_trace.println("eta/selector.jsp - findStopOnClick -- BEGIN", Trace.DIAG1);  //@31
+		
+		var txtFindStopID = document.stopSelectForm.txtFindStopID;
+		var txtFindStopIDStr = txtFindStopID.value;
+		var newDoc = "./eta.jsp?";
+		
+		var agencySelect = document.stopSelectForm.agencySelect;
+		if (agencySelect !== undefined)
+		{
+			agencyStr = agencySelect.options[agencySelect.selectedIndex].value;
+			agencyStr = encodeURIComponent(agencyStr);
+			newDoc += "agency="+agencyStr+"&";
+		}
+		
+		// @31 Get the selected rtpi feed names from the feed selection combo box.
+		var selectedRtpiFeeds = $("#feedSelector").multiSelectComboBox("getSelectedValues");
+
+
+		newDoc += "route=---&direction=---&stop=---&id=" + txtFindStopIDStr + "&showAllBusses=on";
+		
+		//@31
+		if(selectedRtpiFeeds != null && selectedRtpiFeeds.length > 0)
+		{
+			newDoc += "&selectedRtpiFeeds=" + selectedRtpiFeeds.join(",");
+		}
+		//end @31
+		  
+		newDoc += "&findstop=on";  //@34 to indicate find stop.
+
+
+
+		document.location.href = newDoc;
+		
+		g_trace.println("eta/selector.jsp - findStopOnClick -- END", Trace.DIAG1);  //@31
+	}
+	
+	//@34
+	/**
+	* Function generates and returns to eta link with given stop id.
+	*
+	* @param {string} stopId The stopID in the format like "feed:stopid".
+	* @return {string} The generated ETA URL with query string.
+	*/
+	function getEtaLink(stopId)
+	{
+		var newDoc = "./eta.jsp?";
+		
+		var agencySelect = document.stopSelectForm.agencySelect;
+		if (agencySelect !== undefined)
+		{
+			agencyStr = agencySelect.options[agencySelect.selectedIndex].value;
+			agencyStr = encodeURIComponent(agencyStr);
+			newDoc += "agency="+agencyStr+"&";
+		}
+
+		//Get the selected rtpi feed names from the feed selection combo box.
+		var selectedRtpiFeeds = $("#feedSelector").multiSelectComboBox("getSelectedValues");
+
+		newDoc += "route=---&direction=---&stop=---&id=" + stopId+ "&showAllBusses=on";
+
+
+		if(selectedRtpiFeeds != null && selectedRtpiFeeds.length > 0)
+		{
+			newDoc += "&selectedRtpiFeeds=" + selectedRtpiFeeds.join(",");
+		}
+		
+		
+		
+		return newDoc;
+	}
+	
+   /**
+	* function to go to eta link
+	* 
+	* @param {string} stopid The stopID in the format like "feed:stopid".
+	*/
+	function gotoEta(stopid)
+	{
+		document.location.href = getEtaLink(stopid);
+	}
+	
+    //@35
+   /**
+	* function to prompt the user to select stop when stop id found in more that one feed
+	*/
+	function multipleStopsPrompt()
+	{
+		g_trace.println("eta/selector.jsp - multipleStopsPrompt -- BEGIN", Trace.DIAG1);
+    	
+    	//define localized text parameters used by the prompt.
+		var dialogTitle = "Multiple Stops Found";
+		var dialogCloseTip = "Close";
+		var dialogSubject = "Stop identifier found in more than one feed. Please choose one:";
+		
+		var htmlString = "<div><p>" + dialogSubject + "</p>";
+
+		var link;
+   		
+   		
+		htmlString += "</div>";
+		
+		var dialogDIV = document.getElementById("dialog");
+		dialogDIV.innerHTML = htmlString;
+		dialogDIV.style.display = "";
+		
+		//initialize an JQuery UI dailog with options and then popup it.
+		$(dialogDIV).dialog({autoOpen: false, resizable : false});
+		//$(dialogDIV).dialog({modal: true});
+		$(dialogDIV).dialog("option", "title", dialogTitle);
+		$(dialogDIV).dialog("option", "closeText", dialogCloseTip);
+		$(dialogDIV).dialog("open");
+		
+		g_trace.println("eta/selector.jsp - multipleStopsPrompt -- END", Trace.DIAG1);
+	}
+	//end @34 @35
+
+	//@28
+	/**
+	*  Called when the show all vehicles for this stop checkbox is clicked. 
+	*/
+	function showAllBussesChanged(checked)
+	{
+		g_trace.println("eta/selector.jsp - showAllBussesChanged -- BEGIN", Trace.DIAG1);
+
+		var agencySelect = document.stopSelectForm.agencySelect;	
+		var agencyStr;
+		
+		if (agencySelect !== undefined)
+		{
+			agencyStr = agencySelect.options[agencySelect.selectedIndex].value;
+		}
+
+		var routeString = $("#routeSelector :selected").val();
+
+		var directionString = $("#directionSelector :selected").val();
+
+		var stopName = $("#stopSelector :selected").text();
+		var stopStrings = $("#stopSelector :selected").val();
+		stopStrings = encodeURIComponent(stopStrings); //@40
+
+		var showAllBussesCheckbox = document.stopSelectForm.showAllBusses;
+		var showAllBusses = showAllBussesCheckbox.checked;
+
+		var selectedRtpiFeeds = $("#feedSelector").multiSelectComboBox("getSelectedValues");
+
+		stopName = encodeURIComponent(stopName);  //@13
+		directionString = encodeURIComponent(directionString); //@14
+
+		var newDoc = "./eta.jsp?";
+
+		if (agencyStr !== undefined) 
+		{
+			agencyStr = encodeURIComponent(agencyStr);
+			newDoc += "agency="+agencyStr+"&";
+		}
+		
+		var stopID = encodeURIComponent(""); 
+
+		newDoc += "route=" + routeString + "&";
+		newDoc += "direction=" + directionString + "&";
+		newDoc += "stop=" + stopName + "&";
+		newDoc += "id=" + stopID + "&";
+		newDoc += "showAllBusses=" + (showAllBusses ? "on" : "off");
+
+		if(selectedRtpiFeeds != null && selectedRtpiFeeds.length > 0)
+		{
+			newDoc += "&selectedRtpiFeeds=" + selectedRtpiFeeds.join(",");
+		}
+
+
+
+		document.location.href = newDoc;
+
+		g_trace.println("eta/selector.jsp - showAllBussesChanged -- END", Trace.DIAG1);
+	}
+	//end @28
+	
+	// Function to get routes by agancy
+	function getRoutesByAgency(agencyIdChosen)
+	{
+		var xmlhttp2=null;
+		var jspGetRoutesForAgency = "/bustime/map/getRoutesForAgency.jsp";
+		var url2 = jspGetRoutesForAgency + "?agency=" + agencyIdChosen + "&key="+Math.random();
+	
+		// code for Mozilla, etc.
+		if (window.XMLHttpRequest) {
+			xmlhttp2=new XMLHttpRequest();
+		}
+		// code for IE
+		else if (window.ActiveXObject) {
+			xmlhttp2=new ActiveXObject("Microsoft.XMLHTTP");
+		}
+	
+		if (xmlhttp2!=null) {
+			xmlhttp2.onreadystatechange=function() {stateChangeRoutes(xmlhttp2);};
+			xmlhttp2.open("GET",url2,true);
+			xmlhttp2.send(null);
+		}
+		
+	}
+	
+	//Function invoked when the state of the HTTP request for routes information has changed.
+	// This is invoked when the AJAX status has been updated by a response from the server.
+	// Only a readyState = 4 and status = 200 is a good response.  Any other readyState means
+	// we need to keep waiting. Any other status from the server is a failure.
+	function stateChangeRoutes(xmlhttp)
+	{
+		// if xmlhttp shows "loaded"
+		try {
+			if (xmlhttp.readyState==4) {
+				// status 200 means the request was processed successfully - "OK"
+				if (xmlhttp.status==200) {
+					processXmlDocumentRoutes(xmlhttp.responseXML);
+				}
+			}
+		} catch (e) {
+			alert(e);
+		}
+	}
+	
+	//Process Route Xml 
+	function processXmlDocumentRoutes(xml)
+	{
+		var routesTag = xml.getElementsByTagName("routes");
+		var routeTag = routesTag[0].getElementsByTagName("route");
+		var routeSelect = document.stopSelectForm.routeSelect;
+		while (routeSelect.options.length > 0) {
+			routeSelect.options[0] = null;
+		}
+		g_routes = []; //@32 @36
+		
+		for (var i=0; i<routeTag.length;i++) {
+			var routeIdTag = routeTag[i].getElementsByTagName("id");
+			var routeDisplayDesignatorTag = routeTag[i].getElementsByTagName("rtdd");
+			var routeNameTag = routeTag[i].getElementsByTagName("nm");
+			var route = routeIdTag[0].firstChild.data;
+			var routeDisplayDesignator = routeDisplayDesignatorTag[0].firstChild.data;
+			var routeName = routeNameTag[0].firstChild.data;
+			var routeDisplay = routeDisplayDesignator
+			if (routeName.length != 0)
+			{
+					routeDisplay = routeDisplay + "-" + routeName;
+			}
+	        routeSelect.options[routeSelect.options.length] = new Option(routeDisplay, route);
+
+			var routeObject = new cd.Route(route, null, routeDisplayDesignator, routeName, null, null, null, cd.Properties.MODE_BUS); //@32
+			g_routes.push(routeObject); //@32 @36
+		}
+		
+		if(routeSelect.options.length == 0) {
+			routeSelect.options[routeSelect.options.length] = new Option("No routes found", "");
+		} else {
+			routeSelect.selectedIndex = 0;
+			routeSelected();
+		}
+	}
+	
+	//end @17
+
+	//@28
+	/**
+	 * Initializes the route, direction, stop selection combo boxes.
+	 * Called when page is loaded.
+	 */
+	function initializeSelection()
+	{
+		initializeRtpiFeeds();
+		initializeRoutes(false); // After initializing routes completes, initializeDirections() will be called...
+	}
+	//end @28
+
+
+	//@28 @30
+	/**
+	 * Initializes the feed selection control.
+	 */
+	function initializeRtpiFeeds()
+	{
+		g_trace.println("eta/selector.jsp - initializeRtpiFeeds -- BEGIN", Trace.DIAG1);
+
+		// Clear the g_rtpiFeeds array
+		g_rtpiFeeds = [];
+
+		// Add feeds to the g_rtpiFeeds array for each enabled feed.
+
+		g_rtpiFeeds.push(new cd.RtpiFeed(
+							"bustime",
+							"CTA"));
+
+
+		// Clear the feed selector combo box items.
+		$("#feedSelector").empty();
+
+		// Add feed combo box items for all the enabled feeds.
+		for(var i=0; i<g_rtpiFeeds.length; i++) 
+		{
+			var feed = g_rtpiFeeds[i];
+			var option = new Option(feed.getDisplayName(), feed.getName());
+			$("#feedSelector").append(option);
+		}
+
+		var selectedRtpiFeeds = [];
+
+
+		// Select the feed combo box items corresponding to the selected feeds.
+		$("#feedSelector").val(selectedRtpiFeeds);
+		
+		// If only 1 feed available, hide the feed selection combo box.
+		if(g_rtpiFeeds.length <= 1)
+		{
+			$("#feedSelectorTable").hide();
+		}
+
+		g_trace.println("eta/selector.jsp - initializeRtpiFeeds -- END", Trace.DIAG1);
+	}
+	//end @28 @30
+
+
+	//@30
+	/**
+	 * Adds the given route to the g_routes map if it is from one of the selected feeds, or if all feeds are selected.
+	 * 
+	 * @param {cd.Route} route - Route to add.
+	 * @param {string[]} selectedRtpiFeedStrings - Array of rtpiFeedNames selected in feed selection combo box.
+	 */
+	function addRoute(route, selectedRtpiFeedStrings)
+	{
+		g_trace.println("eta/selector.jsp - addRoute -- BEGIN", Trace.DIAG2);
+
+		// Check if the routes rtpi feed exists in the g_rtpiFeeds array.
+		// Due to PIDRSLLC caching, it is possible that PIDRS.getRoutes returns a route with a feed that is not in the list of feeds returned by PIDRS.getRtpiDataFeeds.
+		// This scenario eventually resolves itself when caches for route & rtpi feed become up to date.
+		var routeFeedExists = cd.RtpiFeed.getRtpiFeed(g_rtpiFeeds, route.getExpandedRtpiFeedName()) != null;
+		if(!routeFeedExists)
+		{
+			g_trace.println("eta/selector.jsp - addRoute -- Route's feed does not exist in rtpi feed array. route=" + route + ", g_rtpiFeeds=" + g_rtpiFeeds, Trace.WARNING);
+		}
+		else if(selectedRtpiFeedStrings == null || selectedRtpiFeedStrings.indexOf(route.getExpandedRtpiFeedName()) > -1)
+		{
+			// Only add Route to route combo box if it belongs to one of the selected feeds in feed combo box or if none or all feeds are selected.
+			g_routes.push(route); //@36
+		}
+
+		g_trace.println("eta/selector.jsp - addRoute -- END", Trace.DIAG2);
+	}
+	//end @30
+
+
+	//@28 @29 @30
+	/**
+	 * Initializes the route selection combo box.
+	 *
+	 * If clearSelection is true, it clears any selection in route, direction & stop combo boxes.
+	 * If clearSelection is false, it sets current route selection to the selected route (from cookie or url parameter), then makes ajax call to initialize directions.
+	 * 
+	 * @param {boolean} clearSelection
+	 */
+	function initializeRoutes(clearSelection)
+	{
+		g_trace.println("eta/selector.jsp - initializeRoutes -- BEGIN", Trace.DIAG1);
+
+		g_trace.assertBoolean(clearSelection);
+
+		var selectedRoute = "---" ; 
+
+		var selectedRtpiFeedStrings = $("#feedSelector").val();
+
+		// Create javascript map of Route objects.
+		g_routes = []; //@36
+		var route;
+
+		route = new cd.Route( //@24
+							"1",
+							"",
+							"1",
+							"Bronzeville/Union Station",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"2",
+							"",
+							"2",
+							"Hyde Park Express",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"3",
+							"",
+							"3",
+							"King Drive",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"4",
+							"",
+							"4",
+							"Cottage Grove",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"5",
+							"",
+							"5",
+							"South Shore Night Bus",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"6",
+							"",
+							"6",
+							"Jackson Park Express",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"7",
+							"",
+							"7",
+							"Harrison",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"8",
+							"",
+							"8",
+							"Halsted",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"8A",
+							"",
+							"8A",
+							"South Halsted",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"9",
+							"",
+							"9",
+							"Ashland",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"X9",
+							"",
+							"X9",
+							"Ashland Express",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"11",
+							"",
+							"11",
+							"Lincoln",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"12",
+							"",
+							"12",
+							"Roosevelt",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"J14",
+							"",
+							"J14",
+							"Jeffery Jump",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"15",
+							"",
+							"15",
+							"Jeffery Local",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"18",
+							"",
+							"18",
+							"16th/18th",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"19",
+							"",
+							"19",
+							"United Center Express",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"20",
+							"",
+							"20",
+							"Madison",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"21",
+							"",
+							"21",
+							"Cermak",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"22",
+							"",
+							"22",
+							"Clark",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"24",
+							"",
+							"24",
+							"Wentworth",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"26",
+							"",
+							"26",
+							"South Shore Express",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"28",
+							"",
+							"28",
+							"Stony Island",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"29",
+							"",
+							"29",
+							"State",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"30",
+							"",
+							"30",
+							"South Chicago",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"31",
+							"",
+							"31",
+							"31st",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"34",
+							"",
+							"34",
+							"South Michigan",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"35",
+							"",
+							"35",
+							"31st/35th",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"36",
+							"",
+							"36",
+							"Broadway",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"37",
+							"",
+							"37",
+							"Sedgwick",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"39",
+							"",
+							"39",
+							"Pershing",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"43",
+							"",
+							"43",
+							"43rd",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"44",
+							"",
+							"44",
+							"Wallace-Racine",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"47",
+							"",
+							"47",
+							"47th",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"48",
+							"",
+							"48",
+							"South Damen",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"49",
+							"",
+							"49",
+							"Western",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"49B",
+							"",
+							"49B",
+							"North Western",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"X49",
+							"",
+							"X49",
+							"Western Express",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"50",
+							"",
+							"50",
+							"Damen",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"51",
+							"",
+							"51",
+							"51st",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"52",
+							"",
+							"52",
+							"Kedzie/California",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"52A",
+							"",
+							"52A",
+							"South Kedzie",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"53",
+							"",
+							"53",
+							"Pulaski",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"53A",
+							"",
+							"53A",
+							"South Pulaski",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"54",
+							"",
+							"54",
+							"Cicero",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"54A",
+							"",
+							"54A",
+							"North Cicero/Skokie Blvd.",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"54B",
+							"",
+							"54B",
+							"South Cicero",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"55",
+							"",
+							"55",
+							"Garfield",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"55A",
+							"",
+							"55A",
+							"55th/Austin",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"55N",
+							"",
+							"55N",
+							"55th/Narragansett",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"56",
+							"",
+							"56",
+							"Milwaukee",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"57",
+							"",
+							"57",
+							"Laramie",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"59",
+							"",
+							"59",
+							"59th/61st",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"60",
+							"",
+							"60",
+							"Blue Island/26th",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"62",
+							"",
+							"62",
+							"Archer",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"62H",
+							"",
+							"62H",
+							"Archer/Harlem",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"63",
+							"",
+							"63",
+							"63rd",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"63W",
+							"",
+							"63W",
+							"West 63rd",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"65",
+							"",
+							"65",
+							"Grand",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"66",
+							"",
+							"66",
+							"Chicago",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"67",
+							"",
+							"67",
+							"67th-69th-71st",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"68",
+							"",
+							"68",
+							"Northwest Highway",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"70",
+							"",
+							"70",
+							"Division",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"71",
+							"",
+							"71",
+							"71st/South Shore",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"72",
+							"",
+							"72",
+							"North",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"73",
+							"",
+							"73",
+							"Armitage",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"74",
+							"",
+							"74",
+							"Fullerton",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"75",
+							"",
+							"75",
+							"74th-75th",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"76",
+							"",
+							"76",
+							"Diversey",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"77",
+							"",
+							"77",
+							"Belmont",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"78",
+							"",
+							"78",
+							"Montrose",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"79",
+							"",
+							"79",
+							"79th",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"80",
+							"",
+							"80",
+							"Irving Park",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"81",
+							"",
+							"81",
+							"Lawrence",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"81W",
+							"",
+							"81W",
+							"West Lawrence",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"82",
+							"",
+							"82",
+							"Kimball-Homan",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"84",
+							"",
+							"84",
+							"Peterson",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"85",
+							"",
+							"85",
+							"Central",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"85A",
+							"",
+							"85A",
+							"North Central",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"86",
+							"",
+							"86",
+							"Narragansett/Ridgeland",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"87",
+							"",
+							"87",
+							"87th",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"88",
+							"",
+							"88",
+							"Higgins",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"90",
+							"",
+							"90",
+							"Harlem",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"91",
+							"",
+							"91",
+							"Austin",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"92",
+							"",
+							"92",
+							"Foster",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"93",
+							"",
+							"93",
+							"California/Dodge",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"94",
+							"",
+							"94",
+							"South California",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"95",
+							"",
+							"95",
+							"95th",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"96",
+							"",
+							"96",
+							"Lunt",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"97",
+							"",
+							"97",
+							"Skokie",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"X98",
+							"",
+							"X98",
+							"Avon Express",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"100",
+							"",
+							"100",
+							"Jeffery Manor Express",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"103",
+							"",
+							"103",
+							"West 103rd",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"106",
+							"",
+							"106",
+							"East 103rd",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"108",
+							"",
+							"108",
+							"Halsted/95th",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"111",
+							"",
+							"111",
+							"111th/King Drive",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"111A",
+							"",
+							"111A",
+							"Pullman Shuttle",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"112",
+							"",
+							"112",
+							"Vincennes/111th",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"115",
+							"",
+							"115",
+							"Pullman/115th",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"119",
+							"",
+							"119",
+							"Michigan/119th",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"120",
+							"",
+							"120",
+							"Ogilvie/Streeterville Express",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"121",
+							"",
+							"121",
+							"Union/Streeterville Express",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"124",
+							"",
+							"124",
+							"Navy Pier",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"125",
+							"",
+							"125",
+							"Water Tower Express",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"126",
+							"",
+							"126",
+							"Jackson",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"132",
+							"",
+							"132",
+							"Goose Island Express",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"134",
+							"",
+							"134",
+							"Stockton/LaSalle Express",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"135",
+							"",
+							"135",
+							"Clarendon/LaSalle Express",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"136",
+							"",
+							"136",
+							"Sheridan/LaSalle Express",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"143",
+							"",
+							"143",
+							"Stockton/Michigan Express",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"146",
+							"",
+							"146",
+							"Inner Drive/Michigan Express",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"147",
+							"",
+							"147",
+							"Outer Drive Express",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"148",
+							"",
+							"148",
+							"Clarendon/Michigan Express",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"151",
+							"",
+							"151",
+							"Sheridan",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"152",
+							"",
+							"152",
+							"Addison",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"155",
+							"",
+							"155",
+							"Devon",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"156",
+							"",
+							"156",
+							"LaSalle",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"157",
+							"",
+							"157",
+							"Streeterville/Taylor",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"165",
+							"",
+							"165",
+							"West 65th",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"169",
+							"",
+							"169",
+							"69th-UPS Express",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"171",
+							"",
+							"171",
+							"U. of Chicago/Hyde Park",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"172",
+							"",
+							"172",
+							"U. of Chicago/Kenwood",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"192",
+							"",
+							"192",
+							"U. of Chicago Hospitals Express",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"201",
+							"",
+							"201",
+							"Central/Ridge",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"205",
+							"",
+							"205",
+							"Chicago/Golf",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+		route = new cd.Route( //@24
+							"206",
+							"",
+							"206",
+							"Evanston Circulator",
+							null, null, null, 1);                               //@26
+
+		addRoute(route, selectedRtpiFeedStrings);
+
+
+		$("#routeSelector").empty();
+
+		var NO_ROUTE = "---";
+		if(clearSelection || selectedRoute == NO_ROUTE)
+		{
+			var option = new Option("Select a Route", NO_ROUTE);
+			$("#routeSelector").append(option);
+		}
+
+		var prevFeed;
+		for(var i=0, length=g_routes.length; i<length; i++) //@36
+		{
+			var route = g_routes[i]; //@36
+
+			var feed = route.getExpandedRtpiFeedName();
+
+			if(g_rtpiFeeds.length > 1 && (prevFeed === undefined || prevFeed != feed))
+			{
+				if(prevFeed != undefined) $("#routeSelector").append("</optgroup>");
+
+				var rtpiFeed = cd.RtpiFeed.getRtpiFeed(g_rtpiFeeds, feed);
+				$("#routeSelector").append("<optgroup label='" + rtpiFeed.getDisplayName() + "'>");
+			}
+
+			prevFeed = feed;
+
+			var text = route.getDisplayDesignator() + " - " + route.getName(); //@25
+			var option = new Option(text, route.toFeedColonDesignatorString());
+			$("#routeSelector").append(option);
+		}
+
+		if(g_rtpiFeeds.length > 1 && prevFeed != undefined) $("#routeSelector").append("</optgroup>");
+
+		if(clearSelection)
+		{
+			g_directions = {};
+			$("#directionSelector").empty();
+
+			g_stops = {};
+			$("#stopSelector").empty();
+		}
+		else
+		{
+			$("#routeSelector").val(selectedRoute);
+			initializeDirections();
+		}
+
+		g_trace.println("eta/selector.jsp - initializeRoutes -- END", Trace.DIAG1);
+	}
+	//end @28 @29 @30
+
+
+	/**
+	 * Initializes the directions combo box. When direction combo box initialization is completed, initializeStops is called to initialize the stops combo box.
+	 */
+	function initializeDirections()
+	{
+		g_trace.println("eta/selector.jsp - initializeDirections -- BEGIN", Trace.DIAG1);
+
+		var routeString =  "---"; 
+		var selectedDirectionString = "---"; 
+
+		var route = cd.Route.fromFeedColonDesignatorString(routeString); //@24
+		var selectedDirection = cd.Direction.fromFeedColonNameString(selectedDirectionString); //@24
+
+		getDirections(route, selectedDirection, true);
+
+		g_trace.println("eta/selector.jsp - initializeDirections -- END", Trace.DIAG1);
+	}
+
+
+	/**
+	 * Makes an ajax call to get XML containing direction information.
+	 * Called when page is loaded and when route is changed in route combo box.
+	 * @param route The route to get directions for.
+	 * @param selectedDirection The direction combo box entry to select after direction combo box is populated. If null, no entry is selected.
+	 * @param initializing If true, this was called from initializeDirections (when page was loaded). If so, it will call initializeStops when ajax callback completes.
+	 */
+	function getDirections(route, selectedDirection, initializing)
+	{
+		var url = g_requestContextPath + "/map/getDirectionsStopsForRoute.jsp?";
+		url += "route=" + route.toFeedColonDesignatorString() + "&";
+		if(selectedDirection != null) url += "direction=" + encodeURIComponent(selectedDirection.toFeedColonNameString()) + "&"; //@41
+		url += "key=" + Math.random();
+
+		$.get(url, function(data) {  processXmlDocumentDirections(data, selectedDirection, initializing); });
+	}
+
+
+	/**
+	 * Process the XML containing direction information.
+	 * It will extract directions from the XML & put them in an array of Direction objects.
+	 * After array is created, it will call setDirections to fill the direction combo box.
+	 * @param xml XML containing direction information.
+	 * @param selectedDirection The direction combo box entry to select after direction combo box is populated. If null, no entry is selected.
+	 * @param initializing If true, this was called from initializeDirections (when page was loaded). If so, it will call initializeStops after processing the direction information.
+	 */
+	function processXmlDocumentDirections(xml, selectedDirection, initializing)
+	{
+		g_trace.println("eta/selector.jsp - processXmlDocumentDirections -- BEGIN", Trace.DIAG1);
+
+		try
+		{
+			var routeTag = xml.getElementsByTagName("route");
+			var directionsTag = routeTag[0].getElementsByTagName("directions");	
+			var directionTag = directionsTag[0].getElementsByTagName("direction");
+			var stopsTag = null;
+			if(directionTag.length > 0)											//@12
+				stopsTag = directionTag[0].getElementsByTagName("stops");
+
+			var directions = [];
+
+			for (var i=0; i<directionTag.length;i++)
+			{
+				var nameTag = directionTag[i].getElementsByTagName("name");
+				var displayTag = directionTag[i].getElementsByTagName("dd");
+				var rtpiFeedName = cd.Utils.getElementData(directionTag[i], "rtpiFeedName"); //@24
+				var direction = nameTag[0].firstChild.data;
+				var directionDisplay = displayTag[0].firstChild.data;
+
+				var direction = new cd.Direction(direction, rtpiFeedName, directionDisplay); //@24
+				directions.push(direction);
+				
+			}
+
+			setDirections(directions, selectedDirection);
+			
+			if(initializing)
+			{
+				initializeStops();
+			}
+			else
+			{
+				loadXmlDocumentStops(stopsTag, null);
+			}
+		}
+		catch(e)
+		{
+			g_trace.println("eta/selector.jsp - processXmlDocumentDirections -- Got exception. e=" + e, Trace.ERROR);
+		}
+
+		g_trace.println("eta/selector.jsp - processXmlDocumentDirections -- END", Trace.DIAG1);
+	}
+
+
+	/**
+	 * Populates the direction combo box with the given direction array.
+	 * @param directions Array of directions that will be used to populate stop combo box.
+	 * @param selectedDirection The direction combo box entry to select after direction combo box is populated. If null, no entry is selected.
+	 */
+	function setDirections(directions, selectedDirection)
+	{
+		g_directions = {};
+		
+		$("#directionSelector").empty();
+
+		for (var i=0; i<directions.length; i++)
+		{
+			var direction = directions[i];
+
+			g_directions[ direction.toFeedColonNameString() ] = direction;
+
+			var option = new Option(direction.getDisplayDirection(), direction.toFeedColonNameString()); //@25
+			$("#directionSelector").append(option);
+		}
+
+		if(selectedDirection != null) $("#directionSelector").val(selectedDirection.toFeedColonNameString());
+	}
+
+
+	/**
+	 * Initializes the stops combo box.
+	 */
+	function initializeStops()
+	{
+		g_trace.println("eta/selector.jsp - initializeStops -- BEGIN", Trace.DIAG1);
+
+		var routeString = "---"; 
+		var directionString = "---"; 
+		var selectedStopsString = "";	
+
+		g_trace.println("eta/selector.jsp - initializeStops -- routeString=" + routeString + ", directionString=" + directionString + ", selectedStopsString=" + selectedStopsString, Trace.DIAG1);
+		
+		var route = cd.Route.fromFeedColonDesignatorString(routeString); //@24
+		var direction = cd.Direction.fromFeedColonNameString(directionString); //@24
+		
+		getStops(route, direction, selectedStopsString);
+
+		g_trace.println("eta/selector.jsp - initializeStops -- END", Trace.DIAG1);
+	}
+
+
+	/**
+	 * Makes an ajax call to get XML containing stop information.
+	 * Called when page is loaded and when direction is changed in direction combo box.
+	 * @param route The route to get stops for.
+	 * @param direction The direction to get stops for.
+	 * @param selectedStopsString The stop combo box entry to select after stop combo box is populated. If null, no entry is selected.
+	 */
+	function getStops(route, direction, selectedStopsString)
+	{
+		var url = g_requestContextPath + "/map/getStopsForRouteDirection.jsp?";
+		url += "route=" + encodeURIComponent(route.toFeedColonDesignatorString()) + "&"; //@41
+		url += "direction=" + encodeURIComponent(direction.toFeedColonNameString()) + "&"; //@41
+		url += "key=" + Math.random();
+
+		$.get(url, function(data) {  processXmlDocumentStops(data, selectedStopsString); });
+	}
+
+
+	/**
+	 * Process the XML containing stop information.
+	 * @param xml XML containing stop information.
+	 * @param selectedStopsString The stop combo box entry to select after stop combo box is populated. If null, no entry is selected.
+	 */
+	function processXmlDocumentStops(xml, selectedStopsString)
+	{
+		g_trace.println("eta/selector.jsp - processXmlDocumentStops -- BEGIN", Trace.DIAG1);
+
+		g_trace.println("eta/selector.jsp - processXmlDocumentStops -- xml=" + xml + ", selectedStopsString=" + selectedStopsString, Trace.DIAG1);
+		
+		try
+		{
+			var routeTag = xml.getElementsByTagName("route");
+			var stopsTag = routeTag[0].getElementsByTagName("stops");	
+			loadXmlDocumentStops(stopsTag, selectedStopsString);
+		}
+		catch(e)
+		{
+			g_trace.println("eta/selector.jsp - processXmlDocumentStops -- Got exception. e=" + e, Trace.ERROR);
+		}
+
+		g_trace.println("eta/selector.jsp - processXmlDocumentStops -- END", Trace.DIAG1);
+	}
+
+
+	/**
+	 * Process the XML containing stop information.
+	 * It will extract stops from the XML & put them in an array of Stop objects.
+	 * After array is created, it will call setStops to fill the stop combo box.
+	 * @param stopsTag XML containing stop information.
+	 * @param selectedStopsString The stop combo box entry to select after stop combo box is populated. If null, no entry is selected.
+	 */
+	function loadXmlDocumentStops(stopsTag, selectedStopsString)
+	{
+		var stops = [];
+		
+		if(stopsTag != null)
+		{
+			var stopTag = stopsTag[0].getElementsByTagName("stop");
+
+			for(var i=0; i<stopTag.length;i++)
+			{
+				var name = stopTag[i].getElementsByTagName("name")[0].firstChild.data;
+				var id = stopTag[i].getElementsByTagName("id")[0].firstChild.data;
+				var feed = cd.Utils.getElementData(stopTag[i], "rtpiFeedName"); //@24
+
+				var stop = new cd.Stop(id, feed, name); //@24
+				stops.push(stop);
+			}
+		}
+
+		setStops(stops, selectedStopsString);
+	}
+
+
+	/**
+	 * Populates the stop combo box with the given stop array.
+	 * @param stops Array of stops that will be used to populate stop combo box.
+	 * @param selectedStopsString The stop combo box entry to select after stop combo box is populated. If null, no entry is selected.
+	 */
+	function setStops(stops, selectedStopsString)
+	{
+		g_stops = {};
+		
+		// Clear the stop combo box
+		$("#stopSelector").empty();
+
+		if(selectedStopsString == null)
+		{
+			// Add a 'Select stop' combo box entry
+			var selectStopOption = new Option("Select Stop", "");
+			selectStopOption.stop = null;
+			$("#stopSelector").append(selectStopOption);
+		}
+
+		// Add a combo box item for each stop in the passed in array.
+		// Any consecutive stops with identical names are merged into a single entry.
+		// The combo box item value holds the stops feed:stopId.
+		// If stops with the same name were merged, then this is a comma separated list of feed:stopId's.
+ 		var prevFeedAndId = "";
+ 		var prevName = "";
+ 		var prevStop = null;
+ 		for (var i=0; i<stops.length;i++)
+ 		{
+ 			var stop = stops[i];
+ 			
+ 			var feedAndId = stop.toFeedColonIdString();
+ 			var name = stop.getName(); //@25
+
+ 			g_stops[ feedAndId ] = stop;
+ 			
+			if(i > 0)
+			{
+				if(prevName == name)
+				{
+					prevFeedAndId += "," + feedAndId;
+				}
+				else
+				{
+					var option = new Option(prevName, prevFeedAndId);
+					option.stop = prevStop;
+					$("#stopSelector").append(option);
+
+					prevStop = stop;
+					prevFeedAndId = feedAndId;
+					prevName = name;
+				}
+			}
+			else
+			{
+				prevStop = stop;
+				prevFeedAndId = feedAndId;
+				prevName = name;
+			}
+		}
+ 
+		if(prevStop != null)
+		{
+			var option = new Option(prevName, prevFeedAndId);
+			option.stop = prevStop;
+			$("#stopSelector").append(option);
+		}
+
+		if(selectedStopsString != null) $("#stopSelector").val(selectedStopsString);
+	}
+
+
+</script>
+
+	<div style="display: inline;">
+ 		<form style="display: inline; margin: 0;" name="stopSelectForm">
+
+			
+			<table id="feedSelectorTable">
+				<tr>
+					<td>
+					</td>
+					<td>
+						<font class="selector_header">
+							Select Feed:
+						</font>
+					</td>
+					<td>	
+						<select id="feedSelector" name="feedSelect" onChange="feedSelected()" style="font-size: 8pt;" multiple size="3"></select>
+					</td>
+				</tr>
+			</table>
+			
+
+				
+			<table> 
+				<tr>
+					<td>
+						<img width="1" src="image/spacer.gif" border="0"/>
+					</td>
+					<td colspan="4" width="100%">
+						<font class="selector_header">Find by Stop #:</font>
+						<img width="5" src="image/spacer.gif" border="0"/>
+						<input id="txtFindStopID" onkeypress = "cd.Utils.searchKeyPress(event,'enterKeyPressed')" type="text" style="font-size:8pt; width:75px;" value=""/>  
+						<img width="5" src="image/spacer.gif" border="0"/>
+						<input id="enterKeyPressed" onclick = "findStopOnClick()"/>			
+						<a id="findStop" href="javascript:findStopOnClick()" onclick="findStopOnClick()" style="text-decoration:none">			
+							<img src="image/findbutton.jpg"  align="top" border="0"/>		
+						</a>
+			
+					</td>
+				</tr>
+			</table>	
+			<table>		
+				<tr>
+					<td>
+						<img width="1" src="image/spacer.gif" border="0"/>
+					</td>
+					<td colspan="4">
+						<font class="selector_header">
+							OR
+						</font>
+					</td>
+				</tr>
+
+				<tr>
+					<td>
+						<img width="1" src="image/spacer.gif" border="0"/>
+					</td>
+					<td>
+						<font class="selector_header">
+							1. Select Route
+						</font>
+					</td>
+					<td>
+						<font class="selector_header">
+							2. Select Direction
+						</font>
+					</td>
+					<td>
+						<font class="selector_header">
+							3. Select Stop
+						</font>
+					</td>
+					<td></td>
+				</tr>
+
+				<tr>
+					<td>
+						<img width="1" src="image/spacer.gif" border="0"/>
+					</td>
+					<td width="104">
+						<select id="routeSelector" name="routeSelect" onChange="routeSelected()" style="font-size: 8pt; width: 190px">	
+						</select>
+					</td>
+
+					<td width="129">
+						<select id="directionSelector" name="directionSelect" onChange="directionSelected()" style="font-size: 8pt; width: 125px" disabled>	
+						</select>
+					</td>
+
+					<td width="390">
+						<select id="stopSelector" name="stopSelect" onChange="stopSelected()" style="font-size: 8pt; width: 350px" disabled> 
+						</select>
+					</td>
+
+					<td align="right">
+
+
+						<center><a id="openMap" href="/bustime/map/displaymap.jsp"> <img src="image/mapbutton2.jpg" border="0"/> </a></center>		
+
+					</td>
+				</tr>
+
+				<tr>
+					<td class="showAllBussesCheckBox" colspan="3">
+						<img width="1" src="image/spacer.gif" border="0"/>
+						<input id="showAllBuses" checked type="checkbox" name="showAllBusses" value="on" onclick="showAllBussesChanged()" disabled/>Show all vehicles for this stop 
+					</td>
+					<td class="showAllBussesCheckBox" colspan="3" align="right">
+
+  
+						&nbsp;
+
+
+					</td> 
+				</tr>
+
+			</table>
+		</form>
+	</div>
+	
+<div id="dialog" style="display:none;"></div>
+
+<script type="text/javascript">
+
+	initializeSelection();
+	
+
+
+
+
+</script>
+</td></tr>
+									<tr><td>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/bustime/map/javascript/CDAjaxGetTimeAndTemp.js" type="text/javascript"></script>
+
+	<table width="100%" border="0" cellpadding="0" cellspacing="0">
+		<tr>
+			<td>
+				<table width="100%" height="13" border="0" cellpadding="0" cellspacing="0">
+					<tr>
+						<td><img src="/bustime/ta/CTA/image/infoupperborder_leftcorner.jpg" border="0"/></td>
+						<td width="100%" background="/bustime/ta/CTA/image/infoupperborder_tile.jpg"></td>
+						<td><img src="/bustime/ta/CTA/image/infoupperborder_rightcorner.jpg" border="0"/></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<table width="100%" id="etalines" border="0" cellpadding="0" cellspacing="0">
+					<tr>
+						<td height=1 align="left" background="/bustime/ta/CTA/image/infoleftborder.jpg" border="0"><img src="/bustime/ta/CTA/image/infoleftborder.jpg" border="0"></td> 
+						<td><img src="image/spacer.gif" border="0" width="10" height="1"/></td>
+
+						<td width="100%">
+						
+						
+
+
+
+<script>
+	var jspGetTimeAndTemp = "/bustime/map/getTimeAndTemp.jsp";
+	window.setTimeout("cd.AjaxGetTimeAndTemp.handleTimeAndTempRequest()", 1); //@4
+</script>
+
+							<div id="divLocationTemperature">
+								
+								<table width="100%" border="0" cellspacing="0" cellpadding="2">
+									<tr>
+										<td align="left" padding-top="20px">
+											<div class="marquee" id="stopName">
+											--- 
+											</div>
+										</td>
+										<td align="right" width=130>
+											<div class="marquee" id="etatimetemp">&nbsp;</div> 
+										</td>
+									</tr>
+								</table>
+								
+							</div>
+						</td>
+
+						<td><img src="image/spacer.gif" border="0" width="10" height="1"/></td>
+						<td align="right" background="/bustime/ta/CTA/image/inforightborder.jpg"><img src="/bustime/ta/CTA/image/inforightborder.jpg" border="0"></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<table width="100%" height="15" border="0" cellpadding="0" cellspacing="0">
+					<tr>
+						<td><img src="/bustime/ta/CTA/image/infolowerborder_leftcorner.jpg" border="0"/></td>
+						<td width="100%" background="/bustime/ta/CTA/image/infolowerborder_tile.jpg"></td>
+						<td><img src="/bustime/ta/CTA/image/infolowerborder_rightcorner.jpg" border="0"/></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</td></tr>
+									<tr><td>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+	.marquee1 {color:#ffffff}
+	.marquee1 {
+		font-weight: bold;
+		font-family: Arial, Tahoma, Helvetica, sans-serif;
+	}	
+
+	.bulletinPopup {color:black}
+	.bulletinPopup {font-family: Arial}
+	.bulletinPopup {font-size: 12pt}
+</style>
+
+
+
+</td></tr> 
+									<tr><td>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+	//@17
+	//Vehicle modes
+	_MODE_BUS = 1;
+	_MODE_RAIL = 3;
+	_MODE_PEOPLE_MOVER = 4;
+	_MODE_FERRY = 2;
+	//end @17
+
+	//@16
+	// Handle the request for updating bus locations.  The request for bus information
+	// will be sent to the server and asynchronous (AJAX) return method assigned (stateChangeBuses).
+	function getBuses()
+	{
+		if(stopIdsChosen == "null") 
+		{		
+			document.getElementById("noArrivals").innerHTML =
+				"<center><font class='destination'>" +
+					"Please select route/direction and stop." +
+				"</font></center>"; //@1
+			return;
+		}
+
+		var url = g_requestContextPath + "/eta/getStopPredictionsETA.jsp?";
+
+		//@13
+		if(agencyIdChosen !== "null") url += "agency=" + agencyIdChosen + "&";
+		url += "route=" + routeIdChosen + "&";
+		url += "stop=" + stopIdsChosen + "&";
+		if(!cd.Utils.isBlank(feedsChosen)) url += "selectedRtpiFeeds=" + feedsChosen + "&";
+		url += "key=" + Math.random();
+		// end @13 @23
+
+		$.get(url, function(data) {  loadPredictions(data); });
+	}
+	//end @16
+
+
+	//@16
+	/**
+	 * Loads the predictions contained in the given XML.
+	 * @param xml XML containing prediction information.
+	 */
+	function loadPredictions(xml)
+	{
+		g_trace.println("eta/predictions.jsp - loadPredictions -- BEGIN", Trace.DIAG2);
+
+		try
+		{
+			processXmlDocumentBuses(xml);
+		}
+		catch (e)
+		{
+			g_trace.println("eta/predictions.jsp - loadPredictions -- Got exception. e=" + e.stack, Trace.ERROR); //@18
+
+			if(!autoPage)
+			{
+				window.clearTimeout(timeout);		
+				timeout = window.setTimeout("getBuses()", busRedisplayInSeconds * 1000);
+			}
+
+			// Start the auto paging if enabled
+			if(autoPage)
+			{
+				if(autoPageTimeout != null)
+				{
+					window.clearTimeout(autoPageTimeout);
+				}
+
+				autoPageTimeout = window.setTimeout("doAutoPage()", autoPageTime);
+			}
+		}
+
+		g_trace.println("eta/predictions.jsp - loadPredictions -- END", Trace.DIAG2);
+	}
+	//end @16
+
+
+	//Function invoked when HTTP request has completed successfully and the XML document
+	// containing bus information for the requested route has been returned.
+	function processXmlDocumentBuses(xml) {
+		for (var i=0; i<arrivalsToShow; i++) {//@12
+			elements[i].route.innerHTML = "&nbsp;";
+			elements[i].time.innerHTML = "<font class='prediction_time'>&nbsp;</font>";
+			elements[i].destination.innerHTML = "&nbsp;";
+			elements[i].vehicle.innerHTML = "&nbsp;";
+			elements[i].vehicle.title = "";	//@17
+			elements[i].time.title = "";	//@17
+		}
+
+		//Find main stop tag
+		var stopTag = xml.getElementsByTagName("stop");
+		var predictionTags = stopTag[0].getElementsByTagName("pre");	
+		if (predictionTags != null && predictionTags.length > 0) {
+			//@12 Get the section of predictionTags array which corresponds to current page
+			calculateNumPages(predictionTags);
+			predictionTags = getCurrentPagePredictionTags(predictionTags);
+			//@12 end
+			document.getElementById("noArrivals").innerHTML = "";
+			for (var x=0; x<predictionTags.length; x++) {//@12
+				var routeDisplayDesignator = predictionTags[x].getElementsByTagName("rd")[0].firstChild.data;
+				var finalDestination = predictionTags[x].getElementsByTagName("fd")[0].firstChild.data;
+				var vehicleDisplay = "";
+				var vehicle = cd.Utils.getElementData(predictionTags[x], "v");
+				var predictionTime = "";
+				if (predictionTags[x].getElementsByTagName("pt")[0].firstChild != null) {
+					predictionTime = predictionTags[x].getElementsByTagName("pt")[0].firstChild.data;
+					if (predictionTime.length > 15) predictionTime = predictionTime.substring(0,14);
+				}
+				var predictionUnit = "";
+				if (predictionTags[x].getElementsByTagName("pu")[0].firstChild != null) {
+					predictionUnit = predictionTags[x].getElementsByTagName("pu")[0].firstChild.data;
+				}
+				elements[x].route.innerHTML = routeDisplayDesignator;
+				if(showZone && predictionTags[x].getElementsByTagName("zone")[0].firstChild)  //@15
+				{
+					var zone = " (" + predictionTags[x].getElementsByTagName("zone")[0].firstChild.data + ") ";
+					zone = zone.toUpperCase();
+					elements[x].time.innerHTML = "<nobr><font class='prediction_time'>" + predictionTime + "</font><font class='prediction_unit'>" + 
+					predictionUnit + "</font><font class='zone_name'>" + zone + "</font></nobr>";
+				}
+				else
+					elements[x].time.innerHTML = "<nobr><font class='prediction_time'>" + predictionTime + "</font><font class='prediction_unit'>" + predictionUnit + "</font></nobr>";
+				
+				if (finalDestination.length > 40) finalDestination = finalDestination.substring(0,39);
+				elements[x].destination.innerHTML = "To" + " " + finalDestination;			
+				
+				//@17 @19
+				var vehicleMode = cd.Utils.getElementData(predictionTags[x], "mode");
+				var isScheduled = cd.Utils.getElementData(predictionTags[x], "scheduled") === "true";
+				//If mode is rail or people mover, display consist ID instead of vehicle ID and display carlist in a tooltip
+				if((vehicleMode == _MODE_RAIL || vehicleMode == _MODE_PEOPLE_MOVER) && !isScheduled)
+				{
+					//set consist ID
+					if(cd.Properties.SHOW_CONSIST)
+					{
+						var consistID = cd.Utils.getElementData(predictionTags[x], "consist");
+						vehicle = cd.Utils.blankIfNull(consistID);
+					}
+					else 
+					{
+						vehicle = "";
+					}
+					
+					//set carlist tooltip
+					var carListDisplay = "";
+					if(cd.Properties.SHOW_CARLIST)
+					{
+						var carList = cd.Utils.getElementData(predictionTags[x], "cars");
+						carListDisplay = "Cars: " + cd.Utils.blankIfNull(carList);	//@22
+					}
+					elements[x].vehicle.title = carListDisplay;
+					elements[x].time.title = carListDisplay;
+				}
+				
+				//determine if last bus of the day
+				var minutesUntilNextBusOnRoute = cd.Utils.getElementData(predictionTags[x], "nextbusminutes");
+				var arrivalTimeOfNextBusOnRoute = cd.Utils.getElementData(predictionTags[x], "nextbusonroutetime");
+				if (minutesUntilNextBusOnRoute>0)
+				{
+					if(cd.Utils.isBlank(vehicle))
+						vehicleDisplay = "Last vehicle for route until " + arrivalTimeOfNextBusOnRoute + "";
+					else
+						vehicleDisplay = "" + vehicle + " - Last vehicle for route until " + arrivalTimeOfNextBusOnRoute + "";
+				}
+				else if (minutesUntilNextBusOnRoute == -1)
+				{
+					if(cd.Utils.isBlank(vehicle))
+						vehicleDisplay = "Last vehicle for route";
+					else
+						vehicleDisplay = "" + vehicle + " - Last vehicle for route";
+				}
+				else
+					vehicleDisplay = vehicle;
+				
+				elements[x].vehicle.innerHTML = vehicleDisplay;
+				//end @17 @19
+			}	
+			//@12
+			//Make them null
+			predictionTags = null;
+			xml = null;
+			generatePageLinks();
+			//@12 end
+		}
+		else
+		{
+			document.getElementById("pageLinksId").innerHTML = "";
+			//else there is an error message in the response returned
+			//read the error and display the appropriate error message
+			var errorTags = stopTag[0].getElementsByTagName("noPredictionMessage");
+			if(errorTags != null && errorTags.length > 0)
+			{
+				var errorString = errorTags[0].firstChild.data;
+				if(errorString == "No arrival times")
+				{
+					document.getElementById("noArrivals").innerHTML = "<center><font class='destination'>No arrival times available for this stop at this time</font></center>"; 
+				}// @21
+				else if(errorString == "No service scheduled")
+				{
+					document.getElementById("noArrivals").innerHTML = "<center><font class='destination'>No service is scheduled for this stop at this time</font></center>";
+				}
+				else if(errorString == "Stop not found")
+				{
+					document.getElementById("noArrivals").innerHTML = "<center><font class='destination'>Stop identifier was not found.</font></center>";
+				}
+				// @14
+				else if(errorString == "Stop not found in agency") 
+				{
+					document.getElementById("noArrivals").innerHTML = "<center><font class='destination'>Stop identifier is not part of the selected agency</font></center>";
+				}
+				//end @14
+				else if(errorString == "Stop not found in feeds")  //@23
+				{
+					document.getElementById("noArrivals").innerHTML = "<center><font class='destination'>Stop identifier was not found within the current feed selection</font></center>";
+				}
+			}
+			errorTags = null;
+		}
+		stopTag = null;
+		if(timeout!=null){
+			window.clearTimeout(timeout);	
+		}
+		
+		if(!autoPage){
+			timeout = window.setTimeout("getBuses()", busRedisplayInSeconds * 1000);
+		}
+	}
+	
+	//@12
+	//This function calculates the total number of pages. The maxETAsToDisplay is used to calculate
+	//the number of pages initially in the jsp itself. Since subsequent calls are made as ajax calls
+	//to get the predictions, the total number of buses over time for whom predictions are generated
+	//may become less than maxETAsToDisplay
+	function calculateNumPages(preTags){
+		var totalETAsToDisplay = maxETAsToDisplay;
+		if(preTags.length<maxETAsToDisplay){
+			totalETAsToDisplay = preTags.length;
+		}
+		//calculate last page number
+		var numPages = Math.floor(totalETAsToDisplay/arrivalsToShow);
+		if(totalETAsToDisplay%arrivalsToShow>0) { numPages++; }
+		lastPageNum = numPages - 1;
+		if(pageNum > lastPageNum){
+			//reset current page
+			pageNum = 0;
+		}
+	}
+	
+	//This function gets the predictions of buses on the page number clicked by a user.
+	//We need to reset the counter for auto paging if a page link is clicked
+	function getBusesForPage(x){
+		if(autoPage) {
+			if(autoPageTimeout!=null){
+				window.clearTimeout(autoPageTimeout);
+			}
+			autoPageTimeout = window.setTimeout("doAutoPage()", autoPageTime);
+		}
+		pageNum=x;
+		getBuses();
+	}
+
+	//This method takes the full list of prediction returned by the ajax call to the backend
+	//to get the predictions and then selects that section of the list which corresponds
+	//to the current page
+	function getCurrentPagePredictionTags(preTags){
+		var totalETAsToDisplay = maxETAsToDisplay;
+		if(preTags.length<totalETAsToDisplay){
+			totalETAsToDisplay = preTags.length;
+		}
+		var startIdx = pageNum*arrivalsToShow;
+		var endIdx = startIdx + arrivalsToShow - 1;
+		if(endIdx >= totalETAsToDisplay){
+			endIdx = totalETAsToDisplay - 1;
+		}
+		var currPagePreTags = new Array();
+		for (var i = startIdx; i <= endIdx; i++) {
+			currPagePreTags.push(preTags[i]);
+		}
+		return currPagePreTags;
+	}
+	
+	//This function is called by the window.setTimeout method for auto paging
+	function doAutoPage() {
+		pageNum++;
+		if(pageNum > lastPageNum) { pageNum = 0;}//cycle back to first page
+		window.clearTimeout(autoPageTimeout);
+		autoPageTimeout = window.setTimeout("doAutoPage()", autoPageTime);
+		getBuses();
+	}
+	
+	//This method creates the page number links for all the pages on the arrival grid
+	//The page number for the current page is not created as a hyperlink
+	function generatePageLinks(){
+		if(lastPageNum==0){//only one page, so don't generate links
+			document.getElementById("pageLinksId").innerHTML = "";
+			return;
+		}
+		var pageLinks = "";
+		for(var i=0; i<=lastPageNum; i++){
+			if(pageNum==i){//don't generate hyperlink
+				pageLinks+=" "+(i+1)+" ";
+			}else {//generate hyperlink
+				pageLinks+=" ";
+				pageLinks+="<a href='javascript:void(0)' onclick='getBusesForPage("+i+")';>"+(i+1)+"</a>";
+				pageLinks+=" ";
+			}
+		}
+		document.getElementById("pageLinksId").innerHTML = "";
+		document.getElementById("pageLinksId").innerHTML = pageLinks;
+	}
+	//@12 end
+</script>
+
+	<table id="etalines" border="0" cellpadding="0" cellspacing="0">
+		<tr id="etamain">
+			<td></td>
+			<td>
+				<table width="100%" border="0" cellpadding="0" cellspacing="0">
+					<tr>
+						<td align="left" width="35%"><font class="prediction_header">Route / Destination</font></td>
+						<td align="center" width="30%"><font class="prediction_header"><span id="pageLinksId" class="prediction_header"></span></font></td>
+						<td align="right" width="35%" nowrap><font class="prediction_header">Estimated Arrival / Vehicle #</font></td>
+					</tr>
+				</table>
+			</td>
+			<td></td>
+		</tr>
+
+		<tr>
+			<td><img src="/bustime/ta/CTA/image/predictionupperborder_leftcorner.jpg" border="0"/></td>
+			<td height="5" background="/bustime/ta/CTA/image/predictionupperborder_tile.jpg"></td>
+			<td><img src="/bustime/ta/CTA/image/predictionupperborder_rightcorner.jpg" border="0"/></td>
+		</tr>
+
+		<tr>
+			<td width="13" background="/bustime/ta/CTA/image/predictionleftborder_tile.jpg" align="left"></td>
+			<td align="center" valign="top">
+				<table border="0" cellpadding="0" cellspacing="0">
+					<tr>
+						<td>
+							<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<td colspan="5"><img src="image/spacer.gif" width="1" height="10" border="0"/></td>
+								</tr>
+								<tr>
+									<td align="left"><img src="image/spacer.gif" width="10" height="1" border="0"/></td>
+									<td width="135" align="left"><div id="route1" class="route">&nbsp;</div></td>												
+									<td width="700" align="left" rowspan='2' valign='middle'><div id="noArrivals" class="route">&nbsp;</div></td>
+									<td width="120" align="right"><div id="time1" max-width: 400px;"><nobr><font class="prediction_time">&nbsp;</font></nobr></div></td>  
+									<td><img src="image/spacer.gif" width="10" height="1" border="0"/></td>
+								</tr>
+								<tr>
+									<td><img src="image/spacer.gif" width="10" height="1" border="0"/></td>
+									<td width="135" align="left"><div id="destination1" class="destination" style="overflow:hidden; max-width: 400px; white-space:nowrap;">&nbsp;</div></td>
+									<td width="0" align="right"><div id="vehicle1" class="vehicle_id">&nbsp;</div></td>	<!-- @17 -->
+									<td><img src="image/spacer.gif" width="10" height="1" border="0"/></td>
+								</tr>
+								<tr>
+									<td colspan="5"><img src="image/spacer.gif" width="1" height="10" border="0"/></td>
+								</tr>
+								<tr>
+									<td colspan="5" id="etamain"><img src="image/spacer.gif" width="725" height="11" border="0"/></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<td colspan="5"><img src="image/spacer.gif" width="1" height="10" border="0"/></td>
+								</tr>
+								<tr>
+									<td align="left"><img src="image/spacer.gif" width="10" height="1" border="0"/></td>
+									<td width="135" align="left"><div id="route2" class="route">&nbsp;</div></td>
+									<td width="700" align="left">&nbsp;</td>
+									<td width="0" align="right"><div id="time2" max-width: 400px;"><nobr><font class="prediction_time">&nbsp;</font></nobr></div></td> 
+									<td><img src="image/spacer.gif" width="10" height="1" border="0"/></td>
+								</tr>
+								<tr>
+									<td><img src="image/spacer.gif" width="10" height="1" border="0"/></td>
+									<td width="135" align="left"><div id="destination2" class="destination" style="overflow:hidden; max-width: 400px; white-space:nowrap;">&nbsp;</div></td>
+									<td width="700" align="left">&nbsp;</td>
+									<td width="0" align="right"><div id="vehicle2" class="vehicle_id">&nbsp;</div></td>
+									<td><img src="image/spacer.gif" width="10" height="1" border="0"/></td>
+								</tr>
+								<tr>
+									<td colspan="5"><img src="image/spacer.gif" width="1" height="10" border="0"/></td>
+								</tr>
+								<tr>
+									<td colspan="5" id="etamain"><img src="image/spacer.gif" width="725" height="11" border="0"/></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<td colspan="5"><img src="image/spacer.gif" width="1" height="10" border="0"/></td>
+								</tr>
+								<tr>
+									<td align="left"><img src="image/spacer.gif" width="10" height="1" border="0"/></td>
+									<td width="135" align="left"><div id="route3" class="route">&nbsp;</div></td>
+									<td width="700" align="left">&nbsp;</td>
+									<td width="0" align="right"><div id="time3" max-width: 400px;"><nobr><font class="prediction_time">&nbsp;</font></nobr></div></td> 
+									<td><img src="image/spacer.gif" width="10" height="1" border="0"/></td>
+								</tr>
+								<tr>
+									<td><img src="image/spacer.gif" width="10" height="1" border="0"/></td>
+									<td width="135" align="left"><div id="destination3" class="destination" style="overflow:hidden; max-width: 400px; white-space:nowrap;">&nbsp;</div></td>
+									<td width="700" align="left">&nbsp;</td>
+									<td width="0" align="right"><div id="vehicle3" class="vehicle_id">&nbsp;</div></td>
+									<td><img src="image/spacer.gif" width="10" height="1" border="0"/></td>
+								</tr>
+								<tr>
+									<td colspan="5"><img src="image/spacer.gif" width="1" height="10" border="0"/></td>
+								</tr>
+								<tr>
+									<td colspan="5" id="etamain"><img src="image/spacer.gif" width="725" height="11" border="0"/></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<td colspan="5"><img src="image/spacer.gif" width="1" height="10" border="0"/></td>
+								</tr>
+								<tr>
+									<td align="left"><img src="image/spacer.gif" width="10" height="1" border="0"/></td>
+									<td width="135" align="left"><div id="route4" class="route">&nbsp;</div></td>
+									<td width="700" align="left">&nbsp;</td>
+									<td width="0" align="right"><div id="time4" max-width: 400px;"><nobr><font class="prediction_time">&nbsp;</font></nobr></div></td> 
+									<td><img src="image/spacer.gif" width="10" height="1" border="0"/></td>
+								</tr>
+								<tr>
+									<td><img src="image/spacer.gif" width="10" height="1" border="0"/></td>
+									<td width="135" align="left"><div id="destination4" class="destination" style="overflow:hidden; max-width: 400px; white-space:nowrap;">&nbsp;</div></td>
+									<td width="700" align="left">&nbsp;</td>
+									<td width="0" align="right"><div id="vehicle4" class="vehicle_id">&nbsp;</div></td>
+									<td><img src="image/spacer.gif" width="10" height="1" border="0"/></td>
+								</tr>
+								<tr>
+									<td colspan="5"><img src="image/spacer.gif" width="1" height="10" border="0"/></td>
+								</tr>
+								<tr>
+									<td colspan="5" id="etamain"><img src="image/spacer.gif" width="725" height="11" border="0"/></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<td colspan="5"><img src="image/spacer.gif" width="1" height="10" border="0"/></td>
+								</tr>
+								<tr>
+									<td align="left"><img src="image/spacer.gif" width="10" height="1" border="0"/></td>
+									<td width="135" align="left"><div id="route5" class="route">&nbsp;</div></td>
+									<td width="700" align="left">&nbsp;</td>
+									<td width="0" align="right"><div id="time5" max-width: 400px;"><nobr><font class="prediction_time">&nbsp;</font></nobr></div></td> 
+									<td><img src="image/spacer.gif" width="10" height="1" border="0"/></td>
+								</tr>
+								<tr>
+									<td><img src="image/spacer.gif" width="10" height="1" border="0"/></td>
+									<td width="135" align="left"><div id="destination5" class="destination" style="overflow:hidden; max-width: 400px; white-space:nowrap;">&nbsp;</div></td>
+									<td width="70" align="left">&nbsp;</td>
+									<td width="0" align="right"><div id="vehicle5" class="vehicle_id">&nbsp;</div></td>
+									<td><img src="image/spacer.gif" width="10" height="1" border="0"/></td>
+								</tr>
+								<tr>
+									<td colspan="5"><img src="image/spacer.gif" width="1" height="10" border="0"/></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+				</table>
+			</td>
+			<td width="12" background="/bustime/ta/CTA/image/predictionrightborder_tile.jpg" align="right"></td>
+		</tr>
+
+		<tr>
+			<td><img src="/bustime/ta/CTA/image/predictionlowerborder_leftcorner.jpg" border="0"/></td>
+			<td height="4" background="/bustime/ta/CTA/image/predictionlowerborder_tile.jpg"></td>
+			<td><img src="/bustime/ta/CTA/image/predictionlowerborder_rightcorner.jpg" border="0"/></td>
+		</tr>
+	</table>
+
+<script>
+
+	var agencyIdChosen = "null";    //@13 @24
+	var routeIdChosen = "null"; //@24
+	var showAllBusses = "on";  //@24
+	var stopIdsChosen = "null"; //@16 //@24
+	var feedsChosen = "";   //@23 //@24
+	if (showAllBusses == "on") {
+		routeIdChosen = "all";
+	}
+	
+	function DisplayLine() {
+		var time = null;
+		var route = null;
+		var destination = null;
+		var vehicle = null;
+	}
+	
+	//@12 start
+	var autoPage = false;//auto page flag
+	var autoPageTime = 5000;//auto paging time in ms
+	var showZone = true;  //@15
+	//Current page number of the arrival grid
+	var pageNum = 0;//
+	var lastPageNum = 3;//will used to generate page links
+	var arrivalsToShow = 5;//number of buses to show per page
+	var maxETAsToDisplay = 20;
+	var elements = new Array();	
+	for(var i=0;i<arrivalsToShow;i++){
+		var dl = new DisplayLine();
+		dl.time = document.getElementById("time"+(i+1));
+		dl.route =  document.getElementById("route"+(i+1));
+		dl.destination =  document.getElementById("destination"+(i+1));
+		dl.vehicle =  document.getElementById("vehicle"+(i+1));
+		elements.push(dl);
+	}
+	//@12 end
+	var counter = 2;
+	//Number of seconds between requests for bus position updates.  Time is
+	// measured starting with the completion of the previous update.
+	var busRedisplayInSeconds = 30;
+	timeout = window.setTimeout("getBuses()", 1);
+	//@12 start
+	//start the auto paging if enabled
+	var autoPageTimeout = null;
+	if(autoPage) {
+		if(autoPageTimeout!=null){
+			window.clearTimeout(autoPageTimeout);
+		}
+		autoPageTimeout = window.setTimeout("doAutoPage()", autoPageTime);
+	}//@12 end
+</script>
+</td></tr>
+									<tr><td>
+
+
+
+
+
+
+
+<script type="text/javascript">
+	function popupCD()
+	{
+		var newwindow=window.open('http://www.cleverdevices.com','name','width=850,height=680,location=yes,menubar=yes,resizable=yes,scrollbars=yes,status=yes,toolbar=yes');
+		newwindow.focus();
+		return false;
+	}
+
+	function popupHelp()
+	{
+		var newwindow=window.open('/bustime/arrivaltimeviewhelp.jsp','name','width=850,height=680,location=yes,menubar=yes,resizable=yes,scrollbars=yes,status=yes,toolbar=yes');
+		newwindow.focus();
+		return false;
+	}
+</script>
+
+	<table width="100%" border="0" cellpadding="0" cellspacing="0">
+		<tr>
+			<td align="left" width="10">
+				<img src="image/spacer.gif" border="0" />
+			</td>
+			<td align="left">
+			 
+				<a onclick="popupHelp()" href="javascript:void(0)">
+					<img border="0" src="/bustime/ta/CTA/image/question_mark.gif" />
+				</a>
+			
+			</td>
+			<td align="right">
+				<a onclick="popupCD()" href="javascript:void(0)">
+					<img src="/bustime/ta/CTA/image/poweredbybustime_eta.jpg" border="0" alt="www.cleverdevices.com" />
+				</a>
+			</td>
+			<td align="right" width="10">
+				<img src="image/spacer.gif" border="0" />
+			</td>
+		</tr>
+	</table>
+</td></tr>
+								</table>
+							</td>
+						</tr>				
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<table border="0" cellpadding="0" cellspacing="0">
+						<tr><td colspan="3">
+
+
+
+
+
+
+
+
+
+
+
+
+	<div id="pagefooter">
+		
+		<div id="text">
+			Copyright 2017 Chicago Transit Authority
+			&nbsp;
+			<a href="/bustime/ta/CTA/terms2.jsp">
+				Terms of Use/Legal
+			</a>
+			&nbsp;
+			
+				<a href="http://www.transitchicago.com/feedback/">
+					Contact Us
+				</a>
+			
+			&nbsp;
+			
+			<a href="http://www.transitchicago.com/">
+				CTA Home Page
+			</a>
+			
+		</div>
+		
+	</div>
+</td></tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+
+	</center>
+	
+	<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-2202627-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+</body>
+
+</html>
