@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Simple Example</title>
+  <style>
+    canvas {
+      border: #333 10px solid;
+    }
+  </style>
+</head>
+ 
+<body>
+    <canvas id="myCanvas" width="500" height="500"></canvas>
+<script>
+
+var canvas = document.querySelector("#myCanvas");
+var context = canvas.getContext("2d");    
+    context.moveTo(160, 130);
+context.lineTo(65, 200);
+context.lineTo(120, 275);
+context.lineTo(250, 250);
+context.closePath();
+ 
+context.lineWidth = 5;
+context.strokeStyle = "#bd99ff";
+context.fillStyle = "#0000ff";
+ 
+context.fill();
+context.stroke();
+// second shape
+context.beginPath();
+context.moveTo(85, 50);
+context.lineTo(450, 300);
+context.closePath();
+ 
+context.lineWidth = 45;
+context.strokeStyle = "steelblue";
+ 
+context.stroke();
+</script>
+
+</body>
+ 
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>repl.it</title>
+  <style>
+ #myCanvas  {
+    background-image: url("http://online.focusky.com/vixm/vphv/files/extfiles/ext_0201582417364120.png");
+    height: "700px"; width:"800px";
+} 
+#plane { display:none;} 
+  </style>
+</head>
+
+<body>
+  <canvas id="myCanvas" width="1000px" height="600px"></canvas>
+  <img id= "plane" src="http://img06.deviantart.net/59f0/i/2014/280/1/5/spore__x_wing_starfighter_by_cyrannian-d81ynvk.png"> 
+  
+
+
+  <script>
+    var canvas = document.querySelector("#myCanvas");
+    var context = canvas.getContext("2d");
+    var livesRemaining = 3;
+    var score = 0;
+    var level = 1;
+    var paused = false;
+    var player = {
+      x: 0,
+      y: 0,
+      costume: "",
+      speed: 1
+    };
+    var harm = {
+      x: 0,
+      y: 0,
+      costume: "http://img06.deviantart.net/59f0/i/2014/280/1/5/spore__x_wing_starfighter_by_cyrannian-d81ynvk.png",
+      speed: 1
+    };
+    var benefit = {
+      x: 0,
+      y: 0,
+      costume: ""
+    };
+   var c= document.getElementById("myCanvas");
+   var ctx= c.getContext("2d");
+    var myImage = new Image();
+    myImage.id="image";
+    myImage.src = "http://www.clipartbest.com/cliparts/RiA/AEL/RiAAEL9iL.png";
+    myImage.addEventListener("load", loadImage, false);
+    window.addEventListener("keydown", moveSomething, false);
+     
+    var deltaX = 0;
+    var deltaY = 0;
+
+    function moveSomething(e) {
+      switch (e.keyCode) {
+        case 37:
+          deltaX -= 10;
+          break;
+        case 38:
+          deltaY -= 10;
+          break;
+        case 39:
+          deltaX += 10;
+          break;
+        case 40:
+          deltaY += 10;
+          break;
+
+      }
+      loadImage(e);
+    }
+
+    function loadImage(e) {
+      context.clearRect(0,0,canvas.width,canvas.height);
+      context.drawImage(myImage, 0 + deltaX, 0 + deltaY);
+    
+    }
+    
+    /*
+         
+           main animation loop
+         
+         */
+    var harmer = document.getElementById("plane");
+    harm.x = 250
+    harm.y = Math.floor(Math.random() *300)
+     harm.x = harm.x - 1;
+      context.drawImage(harmer, harm.x, harm.y , 30, 30);     
+         
+    function animate() { 
+      
+      // update harm and benefit y coordinates
+     
+      // check for and handle edge condition
+
+      // check for and handle harm collision
+
+      // draw benefit
+
+      // check for and handle edge condition
+
+      // check for benefit collision
+     
+
+
+
+      //  if the game has not been paused, 
+      if (!paused) {
+        requestAnimationFrame(animate);
+      }
+
+    }
+  </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Canvas Text Example</title>
+  <style>
+    canvas {
+      border: #333 10px solid;
+    }
+  </style>
+</head>
+ 
+<body>
+  <canvas id="myCanvas" width="550px" height="350px"></canvas>
+ 
+  <script> 
+  var canvas = document.querySelector("#myCanvas");
+var context = canvas.getContext("2d");
+
+context.fillStyle = "steelblue";
+context.fillText("Mark", 40, 125);
+ 
+context.strokeStyle = "#173b79";
+context.strokeText("Hernandez", 40, 275);
+ 
+  </script>
+ 
+</body>
+ 
+</html>
